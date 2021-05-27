@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Layout from "@/layuot/Index";
+import "antd/dist/antd.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component<any, any> {
+  public state: any = {};
+  constructor(props: any) {
+    super(props);
+    this.state.context = React.createContext({});
+    this.state.contextValue = {
+      dd: () => {
+        console.log(1);
+      },
+    };
+  }
+
+  render = () => {
+    const Context = this.state.context;
+    return (
+      <>
+        <Context.Provider value={this.state.contextValue}>
+          <Layout />
+        </Context.Provider>
+      </>
+    );
+  };
 }
-
-export default App;
