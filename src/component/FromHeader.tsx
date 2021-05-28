@@ -1,11 +1,11 @@
 import React from "react";
 import { PageHeader } from "antd";
-// import {  } from "react-router-dom"
 export default class FromHeader extends React.Component<any, any> {
   public state: {} = {};
   constructor(props: any) {
     super(props);
     console.log(this.props);
+    
   }
 
   onBack = () => {
@@ -15,7 +15,7 @@ export default class FromHeader extends React.Component<any, any> {
     ) {
       return null;
     }
-    
+
     this.props.header.onBack(this.props);
   };
 

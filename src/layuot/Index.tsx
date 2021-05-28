@@ -1,11 +1,7 @@
 import React from "react";
 import { Layout, Breadcrumb } from "antd";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Routes from "../route";
-import RoutesGuard from "../component/RouteGuard";
-import LayoutMenu from "@/layuot/component/route/LayoutMenu";
+import { BrowserRouter as Router } from "react-router-dom";
 import LayoutRoute from "@/layuot/Route";
-import { routes as routesInterface } from "../types/Routes";
 
 const { Header, Content, Footer, Sider } = Layout;
 interface state {
@@ -18,6 +14,7 @@ export default class LayoutBase extends React.Component {
   public state: state;
   constructor(props: {} | Readonly<{}>) {
     super(props);
+    console.log(this.props);
     this.state = {
       collapsed: false,
       breadItem: <ul></ul>,
@@ -25,7 +22,6 @@ export default class LayoutBase extends React.Component {
     };
     this.onCollapse = this.onCollapse.bind(this);
     this.brand = this.brand.bind(this);
-    console.log(this);
   }
 
   onCollapse(collapsed: boolean) {

@@ -59,6 +59,7 @@ export default class list extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.tableColumnDel = this.tableColumnDel.bind(this);
+    console.log(this);
   }
 
   tableColumnDel(key: string) {
@@ -140,7 +141,7 @@ export default class list extends React.Component<any, any> {
               return (
                 <Button.Group>
                   <Button size="small">
-                    <Link to="/goods/save">编辑</Link>
+                    {/* <Link to="/goods/save">编辑</Link> */}
                   </Button>
                   <Popconfirm
                     title="是否删除当前商品？"

@@ -9,6 +9,7 @@ export default class list extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
+    console.log(this.context);
   }
 
   render = () => {
@@ -48,11 +49,7 @@ export default class list extends React.Component<any, any> {
         </svg>
       ),
       execute: (editor: any, selection: any, position: any) => {
-        const value = selection ? `## ${selection}` : "## ";
-        editor.replaceSelection(value);
-        position.ch = !!selection ? position.ch : position.ch + 3;
-        editor.setCursor(position.line, position.ch);
-        editor.focus();
+        console.log(editor, selection, position);
       },
     };
 

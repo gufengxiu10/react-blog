@@ -15,13 +15,12 @@ export default class RouteGuard extends React.Component<any> {
     this.props.route.forEach((item: any) => {
       breadcrumb.push(item.title);
     });
-    // if (location.pathname === "/index") replace("/goods/list");
     this.props.tagChange(breadcrumb);
-    console.log(this.props);
   };
 
   render = () => {
     const Html = this.props.component;
+
     return <Html />;
   };
 }

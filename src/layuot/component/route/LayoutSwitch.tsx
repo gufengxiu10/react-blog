@@ -12,9 +12,12 @@ export default class LayoutSwitch extends React.Component<any> {
   private base = (): JSX.Element[] => {
     return Routes.map((item: routesInterface, index: number): JSX.Element => {
       const key = "switch" + index;
-      return item.childer === undefined
-        ? this.once(key, item)
-        : this.child(key, item);
+      const Html =
+        item.childer === undefined
+          ? this.once(key, item)
+          : this.child(key, item);
+
+      return <div key={key}>{Html}</div>;
     });
   };
 
@@ -25,7 +28,6 @@ export default class LayoutSwitch extends React.Component<any> {
       route: [item],
       tagChange: this.props.brand,
     };
-    console.log(key);
     return (
       <Route
         path={path}
@@ -52,7 +54,6 @@ export default class LayoutSwitch extends React.Component<any> {
         ></Route>
       );
     });
-    console.log(Html)
     return Html === undefined ? <></> : <>{Html}</>;
   };
 
