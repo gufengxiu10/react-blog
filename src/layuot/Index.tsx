@@ -2,7 +2,7 @@ import React from "react";
 import { Layout, Breadcrumb } from "antd";
 import { BrowserRouter as Router } from "react-router-dom";
 import LayoutRoute from "@/layuot/Route";
-
+import GlobalContainer from "@/container/Global";
 const { Header, Content, Footer, Sider } = Layout;
 interface state {
   collapsed: boolean | undefined;
@@ -14,7 +14,6 @@ export default class LayoutBase extends React.Component {
   public state: state;
   constructor(props: {} | Readonly<{}>) {
     super(props);
-    console.log(this.props);
     this.state = {
       collapsed: false,
       breadItem: <ul></ul>,
@@ -47,14 +46,13 @@ export default class LayoutBase extends React.Component {
             onCollapse={this.onCollapse}
           >
             <div className="logo" />
-            <LayoutRoute type="menu" brand={this.brand} />
           </Sider>
 
           <Layout className="site-layout">
             <Header className="site-layout-background" style={{ padding: 0 }} />
             <Content style={{ margin: "0 16px" }}>
               {this.state.breadItem}
-              <LayoutRoute type="switch" brand={this.brand} />
+              <GlobalContainer />
             </Content>
             <Footer style={{ textAlign: "center" }}>
               Ant Design ©2018 Created by Ant UED

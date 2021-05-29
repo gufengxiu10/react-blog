@@ -1,7 +1,6 @@
 import React from "react";
 import LayoutMenu from "@/layuot/component/route/LayoutMenu";
 import LayoutSwitch from "@/layuot/component/route/LayoutSwitch";
-import { Breadcrumb } from "antd";
 export default class Routes extends React.Component<any> {
   public state: any = {};
 
@@ -13,13 +12,21 @@ export default class Routes extends React.Component<any> {
     };
     switch (this.props.type) {
       case "menu":
-        this.state.type = <LayoutMenu {...config} />;
+        this.state.type = <LayoutMenu {...config} {...this.props} />;
         break;
       case "switch":
         this.state.type = <LayoutSwitch {...config} />;
         break;
     }
+    console.log(this);
   }
+
+  componentDidMount = () => {
+    setInterval(() => {
+      this.props.onIncrement(90);
+      // console.log(this.props);
+    }, 2000);
+  };
 
   private path = (path: Array<string>) => {
     const allPath: string = path
