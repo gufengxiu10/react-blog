@@ -2,15 +2,43 @@ import React from "react";
 import { Form, Input, Row, Col, Select, Radio, Image, Button } from "antd";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import FromHeader from "../../component/FromHeader";
+import axios from "axios";
 const { Option } = Select;
 
 export default class list extends React.Component<any, any> {
-  public state: any = {};
+  public state: any = {
+    data: {},
+  };
 
   constructor(props: any) {
     super(props);
-    console.log(this.context);
+    console.log(this);
+    this.save = this.save.bind(this);
   }
+
+  componentDidMount = () => {
+    this.info();
+  };
+
+  info = async () => {
+    const {
+      route: { match },
+    } = this.props;
+    const data = await axios.get("/article/" + match.params.id);
+    console.log(data);
+    this.setState({ data: data.data });
+  };
+
+  save = async () => {
+    const {
+      route: { match },
+    } = this.props;
+    const resut = await axios.put(
+      "/article/" + match.params.id,
+      this.state.data
+    );
+    console.log(resut);
+  };
 
   render = () => {
     const children: Array<any> = [];
@@ -26,10 +54,9 @@ export default class list extends React.Component<any, any> {
       title: "编辑",
       subTitle: "编辑副标题",
       extra: [
-        <Button key="3">Operation</Button>,
-        <Button key="2">Operation</Button>,
-        <Button key="1" type="primary">
-          Primary
+        <Button key="3">重置</Button>,
+        <Button key="1" type="primary" onClick={this.save}>
+          保存
         </Button>,
       ],
       onBack: (props: any) => {
@@ -55,15 +82,33 @@ export default class list extends React.Component<any, any> {
 
     return (
       <>
-        <FromHeader header={header}>
+        <FromHeader header={header} route={this.props.route}>
           <Form>
             <Row gutter={16}>
               <Col span={18}>
                 <Form.Item label="标题">
-                  <Input />
+                  <Input
+                    value={this.state.data.title}
+                    onChange={(e: any) =>
+                      this.setState({
+                        data: Object.assign(this.state.data, {
+                          title: e.target.value,
+                        }),
+                      })
+                    }
+                  />
                 </Form.Item>
                 <Form.Item label="简介">
-                  <Input />
+                  <Input
+                    value={this.state.data.subtitle}
+                    onChange={(e: any) =>
+                      this.setState({
+                        data: Object.assign(this.state.data, {
+                          subtitle: e.target.value,
+                        }),
+                      })
+                    }
+                  />
                 </Form.Item>
                 <Row gutter={16}>
                   <Col span={12}>

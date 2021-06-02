@@ -18,7 +18,6 @@ export interface IProps {
 export default class Counter extends React.Component<any> {
   constructor(props: any) {
     super(props);
-    console.log(this.props);
   }
   public render() {
     const { value, onIncrement, onDecrement } = this.props;

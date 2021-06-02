@@ -10,4 +10,5 @@ export interface Data {
 export interface State {
   visible: boolean;
   data: Array<Data>;
+  tableSpinLoading : boolean;
 }

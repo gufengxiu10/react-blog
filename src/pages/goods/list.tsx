@@ -60,9 +60,6 @@ export default class list extends React.Component<any, any> {
     super(props);
     this.tableColumnDel = this.tableColumnDel.bind(this);
   }
-
-  
-
   tableColumnDel(key: string) {
     this.setState({ tableSpinLoading: true });
     setTimeout(() => {

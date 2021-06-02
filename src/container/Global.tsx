@@ -26,11 +26,11 @@ export default class Gloadt extends React.Component<any> {
 
   render = () => {
     // 将 reducer 中的状态插入到组件的 props 中
-    const mapStateToProps = (state: StoreState): { value: number } => ({
-      value: state,
-    });
+    // const mapStateToProps = (state: StoreState): { value: number } => ({
+    //   value: state,
+    // });
 
-    const Html = connect(mapStateToProps, this.dispathch())(Route);
-    return <Html />;
+    // const Html = connect(mapStateToProps, this.dispathch())(Route);
+    return <Route />;
   };
 }

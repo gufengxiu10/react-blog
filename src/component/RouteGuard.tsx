@@ -3,6 +3,7 @@ import React from "react";
 export default class RouteGuard extends React.Component<any> {
   constructor(props: any) {
     super(props);
+    console.log(this);
   }
 
   componentWillMount = () => {
@@ -19,8 +20,15 @@ export default class RouteGuard extends React.Component<any> {
   };
 
   render = () => {
+    const route = {
+      history: this.props.history,
+      location: this.props.history,
+      match: this.props.match,
+    };
+
+    console.log(this);
+
     const Html = this.props.component;
-    console.log(Html);
-    return <Html />;
+    return <Html route={route} />;
   };
 }

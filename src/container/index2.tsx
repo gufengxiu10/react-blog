@@ -1,6 +1,6 @@
 const state = (state: any) => {
   return {
-    value: 10000,
+    value: 100,
     type: "switch",
   };
 };

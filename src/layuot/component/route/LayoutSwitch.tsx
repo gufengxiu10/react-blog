@@ -1,6 +1,6 @@
 import React from "react";
 import { routes as routesInterface } from "@/types/Routes";
-import Routes from "@/route";
+import Routes from "@/routes";
 import { Route } from "react-router-dom";
 import RoutesGuard from "@/component/RouteGuard";
 
@@ -27,12 +27,15 @@ export default class LayoutSwitch extends React.Component<any> {
       component: item.component,
       route: [item],
       tagChange: this.props.brand,
+      value: item,
     };
     return (
       <Route
         path={path}
         key={key}
-        render={(prpos: any) => <RoutesGuard {...prpos} {...config} />}
+        render={(prpos: any) => (
+          <RoutesGuard {...prpos} {...this.props} {...config} />
+        )}
       ></Route>
     );
   };
@@ -45,11 +48,14 @@ export default class LayoutSwitch extends React.Component<any> {
         component: value.component,
         route: [item, value],
         tagChange: this.props.brand,
+        value: value,
       };
       return (
         <Route
           path={path}
-          render={(prpos: any) => <RoutesGuard {...prpos} {...config} />}
+          render={(prpos: any) => {
+            return <RoutesGuard {...prpos} {...this.props} {...config} />;
+          }}
           key={ckey}
         ></Route>
       );

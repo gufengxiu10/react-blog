@@ -1,34 +1,14 @@
-import { ModifyAction } from "@/actions";
-import { DECREMENT, INCREMENT } from "@/constants";
-
-const time = (state = 100, action: ModifyAction): number => {
-  // console.log("time", action);
-  switch (action.type) {
-    case INCREMENT:
-      return state + 1;
-    case DECREMENT:
-      return state - 1;
-    default:
-      return state;
-  }
-};
-const INTE = "100";
-type INTE = typeof INTE;
-
-const git = (
-  state = 100,
-  action: {
-    type: INTE;
-  }
-): any => {
-  // console.log("git", action);
-
-  switch (action.type) {
-    case INTE:
-      return state + 1;
-    default:
-      return state;
-  }
-};
-
-export default { time, git };
+import { combineReducers } from "redux";
+import reducer from "@/reducers/index2";
+import Article from "./article";
+//combineReducer的简单实现
+// export default ((reducers: any) => {
+//   return (state: any = {}, action: any) => {
+//     return Object.keys(reducers).reduce((nextState: any, key) => {
+//       nextState[key] = reducers[key](state[key], action);
+//       return nextState;
+//     }, {});
+//   };
+// })(reducers);
+const reducers = Object.assign(Article, reducer);
+export default combineReducers(reducers);

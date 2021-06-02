@@ -1,6 +1,6 @@
 import React from "react";
 import { routes as routesInterface } from "@/types/Routes";
-import Routes from "@/route";
+import Routes from "@/routes";
 import { Menu, Breadcrumb } from "antd";
 import { Link } from "react-router-dom";
 const { SubMenu } = Menu;

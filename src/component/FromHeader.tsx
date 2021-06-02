@@ -5,7 +5,6 @@ export default class FromHeader extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     console.log(this.props);
-    
   }
 
   onBack = () => {
@@ -15,8 +14,7 @@ export default class FromHeader extends React.Component<any, any> {
     ) {
       return null;
     }
-
-    this.props.header.onBack(this.props);
+    this.props.route.history.goBack();
   };
 
   render = () => {
@@ -26,7 +24,12 @@ export default class FromHeader extends React.Component<any, any> {
           <PageHeader
             {...this.props.header}
             onBack={this.onBack}
-            style={{ background: "#fff" }}
+            style={{
+              background: "#fff",
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+            }}
           />
           <div
             className="site-layout-background"
