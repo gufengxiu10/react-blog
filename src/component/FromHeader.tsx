@@ -4,7 +4,6 @@ export default class FromHeader extends React.Component<any, any> {
   public state: {} = {};
   constructor(props: any) {
     super(props);
-    console.log(this.props);
   }
 
   onBack = () => {

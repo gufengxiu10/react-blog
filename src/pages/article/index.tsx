@@ -5,6 +5,7 @@ import axioas from "axios";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import FromHeader from "@/component/FromHeader";
+import axios from "axios";
 class Article extends React.Component<any> {
   public state: State = {
     visible: false,
@@ -60,7 +61,6 @@ class Article extends React.Component<any> {
   contributePost = async () => {
     try {
       await this.props.getList();
-      console.log(this.props);
     } catch (err) {}
   };
 
@@ -77,7 +77,7 @@ class Article extends React.Component<any> {
   }
 
   async list() {
-    const data = await axioas.get("/article");
+    const { data } = await axioas.get("/article");
     data.data.forEach((item: Data) => {
       item.key = item.id;
     });

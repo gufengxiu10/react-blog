@@ -40,7 +40,6 @@ export default class Routes extends React.Component<any> {
   private path = (path: Array<string>) => {
     const allPath: string = path
       .map((item: string) => {
-        console.log(item)
         return item
           .split("/")
           .filter((item: any) => item)

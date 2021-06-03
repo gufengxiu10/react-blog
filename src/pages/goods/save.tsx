@@ -32,7 +32,6 @@ export default class list extends React.Component<any, any> {
         </Button>,
       ],
       onBack: (props: any) => {
-        console.log(props);
       },
     };
 
@@ -48,7 +47,6 @@ export default class list extends React.Component<any, any> {
         </svg>
       ),
       execute: (editor: any, selection: any, position: any) => {
-        console.log(editor, selection, position);
       },
     };
 

@@ -3,16 +3,18 @@ import { Form, Input, Row, Col, Select, Radio, Image, Button } from "antd";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import FromHeader from "../../component/FromHeader";
 import axios from "axios";
+import { getKeyThenIncreaseKey } from "antd/lib/message";
 const { Option } = Select;
 
 export default class list extends React.Component<any, any> {
   public state: any = {
     data: {},
+    tag: [],
+    cate: "",
   };
 
   constructor(props: any) {
     super(props);
-    console.log(this);
     this.save = this.save.bind(this);
   }
 
@@ -20,13 +22,65 @@ export default class list extends React.Component<any, any> {
     this.info();
   };
 
-  info = async () => {
+  info = () => {
     const {
       route: { match },
     } = this.props;
-    const data = await axios.get("/article/" + match.params.id);
-    console.log(data);
-    this.setState({ data: data.data });
+
+    axios
+      .all([
+        axios.get("/article/" + match.params.id),
+        axios.get("/article/tag"),
+        axios.get("/article/cate"),
+      ])
+      .then(
+        axios.spread((lists, tag, cate) => {
+          this.setState({ data: lists.data });
+          const tagElement = tag.data.data.map((item: any, key: number) => {
+            return (
+              <Option key={key} value={item.id}>
+                {item.name}
+              </Option>
+            );
+          });
+
+          this.setState({
+            tag: (
+              <Select
+                mode="multiple"
+                style={{ width: "100%" }}
+                placeholder="Tags Mode"
+                defaultValue={[]}
+              >
+                {tagElement}
+              </Select>
+            ),
+          });
+
+          const cateElement = cate.data.data.map(
+            (
+              item: {
+                id: number;
+                name: string;
+                create_time?: number;
+                update_time?: number;
+                delete_time?: null | number;
+              },
+              key: number
+            ) => (
+              <Option value={item.id} key={key}>
+                {item.name}
+              </Option>
+            )
+          );
+
+          this.setState({
+            cate: (
+              <Select defaultValue={lists.data.cat_id}>{cateElement}</Select>
+            ),
+          });
+        })
+      );
   };
 
   save = async () => {
@@ -37,19 +91,25 @@ export default class list extends React.Component<any, any> {
       "/article/" + match.params.id,
       this.state.data
     );
-    console.log(resut);
   };
 
-  render = () => {
-    const children: Array<any> = [];
-    for (let i = 10; i < 36; i++) {
-      children.push(
-        <Option key={i.toString(36) + i} value={i}>
-          {i.toString(36) + i}
-        </Option>
+  original = () => {
+    if (this.state.is_original === 0) {
+      return (
+        <Col span={24}>
+          <Form.Item label="作者">
+            <Input />
+          </Form.Item>
+          <Form.Item label="文章出处">
+            <Input />
+          </Form.Item>
+        </Col>
       );
     }
 
+    return null;
+  };
+  render = () => {
     const header = {
       title: "编辑",
       subTitle: "编辑副标题",
@@ -59,9 +119,7 @@ export default class list extends React.Component<any, any> {
           保存
         </Button>,
       ],
-      onBack: (props: any) => {
-        console.log(props);
-      },
+      onBack: (props: any) => {},
     };
 
     const title2 = {
@@ -75,9 +133,7 @@ export default class list extends React.Component<any, any> {
           />
         </svg>
       ),
-      execute: (editor: any, selection: any, position: any) => {
-        console.log(editor, selection, position);
-      },
+      execute: (editor: any, selection: any, position: any) => {},
     };
 
     return (
@@ -112,53 +168,132 @@ export default class list extends React.Component<any, any> {
                 </Form.Item>
                 <Row gutter={16}>
                   <Col span={12}>
-                    <Form.Item label="分类">
-                      <Select defaultValue="lucy">
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
-                        <Option value="disabled" disabled>
-                          Disabled
-                        </Option>
-                        <Option value="Yiminghe">yiminghe</Option>
-                      </Select>
-                    </Form.Item>
+                    <Form.Item label="分类">{this.state.cate}</Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="标签">
-                      <Select
-                        mode="tags"
-                        style={{ width: "100%" }}
-                        placeholder="Tags Mode"
-                      >
-                        {children}
-                      </Select>
-                      ,
-                    </Form.Item>
+                    <Form.Item label="标签">{this.state.tag}</Form.Item>
                   </Col>
                 </Row>
                 <Row gutter={16}>
-                  <Col span={8}>
-                    <Form.Item label="分类">
-                      <Radio.Group value={1}>
+                  <Col span={12}>
+                    <Form.Item label="是否原创">
+                      <Radio.Group
+                        value={this.state.data.is_original}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              is_original: e.target.value,
+                            }),
+                          })
+                        }
+                      >
                         <Radio value={1}>原创</Radio>
-                        <Radio value={2}>转载</Radio>
+                        <Radio value={0}>转载</Radio>
                       </Radio.Group>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col span={12}>
                     <Form.Item label="评论">
-                      <Radio.Group value={1}>
+                      <Radio.Group
+                        value={this.state.data.is_comment}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              is_comment: e.target.value,
+                            }),
+                          })
+                        }
+                      >
                         <Radio value={1}>开启</Radio>
-                        <Radio value={2}>关闭</Radio>
+                        <Radio value={0}>关闭</Radio>
                       </Radio.Group>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col
+                    span={24}
+                    style={{
+                      display:
+                        this.state.data.is_original == 0 ? "block" : "none",
+                    }}
+                  >
+                    <Form.Item label="作者">
+                      <Input
+                        value={this.state.data.author}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              author: e.target.value,
+                            }),
+                          })
+                        }
+                      />
+                    </Form.Item>
+                    <Form.Item label="文章出处">
+                      <Input
+                        value={this.state.data.url}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              url: e.target.value,
+                            }),
+                          })
+                        }
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
                     <Form.Item label="是否发布">
-                      <Radio.Group value={1}>
+                      <Radio.Group
+                        value={this.state.data.is_release}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              is_release: e.target.value,
+                            }),
+                          })
+                        }
+                      >
                         <Radio value={1}>发布</Radio>
-                        <Radio value={2}>下架</Radio>
+                        <Radio value={0}>下架</Radio>
                       </Radio.Group>
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={12}>
+                    <Form.Item label="密码">
+                      <Radio.Group
+                        value={this.state.data.is_password}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              is_password: e.target.value,
+                            }),
+                          })
+                        }
+                      >
+                        <Radio value={1}>是</Radio>
+                        <Radio value={0}>否</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Col>
+                  <Col
+                    span={24}
+                    style={{
+                      display:
+                        this.state.data.is_password == 1 ? "block" : "none",
+                    }}
+                  >
+                    <Form.Item label="密码">
+                      <Input
+                        value={this.state.data.password}
+                        onChange={(e) =>
+                          this.setState({
+                            data: Object.assign(this.state.data, {
+                              password: e.target.value,
+                            }),
+                          })
+                        }
+                      />
                     </Form.Item>
                   </Col>
                 </Row>
