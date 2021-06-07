@@ -7,11 +7,8 @@ export default class FromHeader extends React.Component<any, any> {
   }
 
   onBack = () => {
-    if (
-      this.props.header === undefined ||
-      this.props.header.onBack === undefined
-    ) {
-      return null;
+    if (this.props.header.onBack !== undefined) {
+      return this.props.header.onBack();
     }
     this.props.route.history.goBack();
   };

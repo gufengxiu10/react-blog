@@ -25,7 +25,6 @@ export default class RouteGuard extends React.Component<any> {
       match: this.props.match,
     };
 
-
     const Html = this.props.component;
     return <Html route={route} />;
   };
