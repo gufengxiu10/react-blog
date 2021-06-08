@@ -27,6 +27,12 @@ const routes: Array<routesInterface> = [
         path: "/list",
         component: Article,
       },
+      {
+        title: "文章分类",
+        name: "list",
+        path: "cate",
+        component: Article,
+      },
     ],
   },
 ];

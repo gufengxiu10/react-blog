@@ -1,29 +1,15 @@
 import React from "react";
-import { Data, State } from "./type/index.type";
-import {
-  Table,
-  Popconfirm,
-  Button,
-  message,
-  Spin,
-  Row,
-  Col,
-  Image,
-  Form,
-  Input,
-} from "antd";
+import { Data, State } from "../type/index.type";
+import { Table, Popconfirm, Button, message, Spin } from "antd";
+import axioas from "axios";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import FromHeader from "@/component/FromHeader";
-import axios from "axios";
-class Article extends React.Component<any> {
-  public state: any = {
+class Cate extends React.Component<any> {
+  public state: State = {
     visible: false,
     data: [],
     tableSpinLoading: false,
-    search: {
-      key: "",
-    },
   };
 
   columns: Array<{}> = [
@@ -69,7 +55,6 @@ class Article extends React.Component<any> {
     super(props);
     this.modalShow = this.modalShow.bind(this);
     this.modalHide = this.modalHide.bind(this);
-    this.search = this.search.bind(this);
   }
 
   contributePost = async () => {
@@ -91,7 +76,7 @@ class Article extends React.Component<any> {
   }
 
   async list() {
-    const { data } = await axios.get("/article");
+    const { data } = await axioas.get("/article");
     data.data.forEach((item: Data) => {
       item.key = item.id;
     });
@@ -111,54 +96,16 @@ class Article extends React.Component<any> {
     }, 3000);
   };
 
-  colspan = (item: any) => {
-    return (
-      <Row>
-        <Col span={5}>
-          <Image
-            width={200}
-            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          />
-        </Col>
-      </Row>
-    );
-  };
-
-  search = () => {
-    this.setState({
-      tableSpinLoading: true,
-    });
-    setTimeout(() => {
-      this.setState({
-        tableSpinLoading: false,
-      });
-    }, 3000);
-  };
-
   render() {
     return (
       <FromHeader>
-        <Row gutter={16} style={{ marginBottom: 10 }}>
-          <Col span={6}>
-            <Input placeholder="博文标题" />
-          </Col>
-          <Col span={6}>
-            <Input />
-          </Col>
-          <Col span={6}>
-            <Input />
-          </Col>
-          <Col span={6}>
-            <Button onClick={this.search}>搜索</Button>
-          </Col>
-        </Row>
         <Spin spinning={this.state.tableSpinLoading}>
           <Table
             columns={this.columns}
             dataSource={this.state.data}
             bordered
             expandable={{
-              expandedRowRender: (item) => this.colspan(item),
+              expandedRowRender: (record) => <p style={{ margin: 0 }}>123</p>,
               rowExpandable: (record) => true,
             }}
           />
@@ -168,4 +115,4 @@ class Article extends React.Component<any> {
   }
 }
 
-export default connect()(Article);
+export default connect()(Cate);
