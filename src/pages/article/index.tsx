@@ -9,15 +9,22 @@ import {
   Row,
   Col,
   Image,
-  Form,
+  Select,
   Input,
 } from "antd";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import FromHeader from "@/component/FromHeader";
-import axios from "axios";
+import ArticleApi from "@/api/article";
+const { Option } = Select;
+
 class Article extends React.Component<any> {
-  public state: any = {
+  public state: {
+    visible: boolean;
+    data: Array<any>;
+    tableSpinLoading: boolean;
+    search: {};
+  } = {
     visible: false,
     data: [],
     tableSpinLoading: false,
@@ -91,11 +98,12 @@ class Article extends React.Component<any> {
   }
 
   async list() {
-    const { data } = await axios.get("/article");
-    data.data.forEach((item: Data) => {
+    const { data } = await ArticleApi.lists();
+    console.log(data);
+    data.forEach((item: Data) => {
       item.key = item.id;
     });
-    this.setState({ data: data.data });
+    this.setState({ data: data });
   }
 
   tableColumnDel = (key: any) => {
@@ -138,19 +146,39 @@ class Article extends React.Component<any> {
   render() {
     return (
       <FromHeader>
-        <Row gutter={16} style={{ marginBottom: 10 }}>
-          <Col span={6}>
-            <Input placeholder="博文标题" />
-          </Col>
-          <Col span={6}>
-            <Input />
-          </Col>
-          <Col span={6}>
-            <Input />
-          </Col>
-          <Col span={6}>
+        <Row gutter={16} style={{ marginBottom: 10, padding: "0 10px" }}>
+          <Input.Group compact>
+            <Select defaultValue="Option1-1">
+              <Option value="Option1-1">标题名</Option>
+              <Option value="Option1-2">文章ID</Option>
+            </Select>
+            <Input
+              allowClear
+              style={{ width: "20%", marginRight: "10px" }}
+              defaultValue="0571"
+            />
+            <Select defaultValue="Option1-1" style={{ width: "20%", marginRight: "10px" }}>
+              <Option value="Option1-1">标题名</Option>
+              <Option value="Option1-2">文章ID</Option>
+            </Select>
             <Button onClick={this.search}>搜索</Button>
-          </Col>
+          </Input.Group>
+          {/* <Input.Group>
+            <Input
+              allowClear
+              style={{ width: "20%", marginRight: "10px" }}
+              defaultValue="0571"
+            />
+            <Input
+              allowClear
+              style={{ width: "20%", marginRight: "10px" }}
+              defaultValue="0571"
+            />
+            <Button onClick={this.search}>搜索</Button>
+          </Input.Group> */}
+          {/* <Col span={6}>
+            <Button onClick={this.search}>搜索</Button>
+          </Col> */}
         </Row>
         <Spin spinning={this.state.tableSpinLoading}>
           <Table
