@@ -11,7 +11,9 @@ import {
   Spin,
   message,
   Modal,
+  Upload,
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import FromHeader from "../../component/FromHeader";
 import axios from "axios";
@@ -19,7 +21,8 @@ import { connect } from "react-redux";
 import save from "@/actions/article/save";
 import SaveLabel from "./component/save/LabelComponent";
 import SelectComponent from "./component/save/SelectComponent";
-
+import ArticleApi from "@/api/article";
+import bg from "@/static/images/articlebg.png";
 const { Info } = save;
 const { Option } = Select;
 const { confirm } = Modal;
@@ -49,18 +52,21 @@ class Save extends React.Component<any, any> {
     const {
       route: { match },
     } = this.props;
-
-    const data: any = axios
-      .all([axios.get("/article/" + match.params.id)])
-      .then(
-        axios.spread((lists, cate) => {
-          this.setState({
-            data: lists.data,
-            originData: Object.assign({}, lists.data),
-          });
-          this.setState({ tableSpinLoading: false });
-        })
-      );
+    // match.params.idatch.params.id
+    const data: any = axios.all([ArticleApi.ArticleInfo(match.params.id)]).then(
+      axios.spread((lists) => {
+        const data = Object.assign({}, lists.data);
+        if (lists.data.content != undefined) {
+          lists.data.content = lists.data.content.name;
+        }
+        console.log(data);
+        this.setState({
+          data: data,
+          originData: Object.assign({}, data),
+        });
+        this.setState({ tableSpinLoading: false });
+      })
+    );
   };
 
   save = async () => {
@@ -127,7 +133,20 @@ class Save extends React.Component<any, any> {
       ],
       onBack: () => this.props.route.history.push("/article/list"),
     };
+    console.log(this.state);
+    let content = "";
+    if (this.state.data.content != undefined) {
+      content = this.state.data.content;
+    }
 
+    const props = {
+      name: "file",
+      action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+      headers: {
+        authorization: "authorization-text",
+      },
+      onChange(item: any) {},
+    };
     return (
       <>
         <Spin spinning={this.state.tableSpinLoading}>
@@ -313,13 +332,23 @@ class Save extends React.Component<any, any> {
                   </Row>
                 </Col>
                 <Col span={6}>
-                  <Image src="https://picsum.photos/400/400" />
+                  <Image
+                    src={bg}
+                    style={{
+                      objectFit: "cover",
+                      width: "400p",
+                    }}
+                  />
+                  <Upload {...props}>
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                  </Upload>
+                  ,
                 </Col>
               </Row>
 
               <Form.Item label="内容">
                 <MarkdownEditor
-                  value={this.state.data.content}
+                  value={content}
                   onChange={(editor: any, data: any, value: any) =>
                     this.setState({
                       data: Object.assign(this.state.data, {
