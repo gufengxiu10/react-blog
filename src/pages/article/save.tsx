@@ -44,6 +44,18 @@ class Save extends React.Component<any, any> {
     this.restore = this.restore.bind(this);
   }
 
+  beforeUpload(file: any) {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must smaller than 2MB!");
+    }
+    return isJpgOrPng && isLt2M;
+  }
+
   componentDidMount = () => {
     this.info();
   };
@@ -339,13 +351,8 @@ class Save extends React.Component<any, any> {
                       width: "400p",
                     }}
                   />
-                  <Upload {...props}>
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                  </Upload>
-                  ,
                 </Col>
               </Row>
-
               <Form.Item label="内容">
                 <MarkdownEditor
                   value={content}
