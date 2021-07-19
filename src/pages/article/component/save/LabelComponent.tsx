@@ -17,7 +17,7 @@ export default class LabelComponent extends React.Component<any> {
   }
 
   getInfo = async () => {
-    const { data } = await axios.get("/article/tag");
+    const { data } = await axios.get("/api/article/tag");
     this.setState({ data: data.data });
   };
 

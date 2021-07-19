@@ -71,7 +71,7 @@ export default class ListItem extends React.Component<any, any> {
     let tagElement: any = <></>;
     if (this.props.item.tag != undefined) {
       const tag = this.props.item.tag.map((i: any) => (
-        <Tag color={this.getRandomColor()}>{i.name}</Tag>
+        <Tag color={this.getRandomColor()} key={i.id}>{i.name}</Tag>
       ));
 
       tagElement = (
@@ -86,16 +86,22 @@ export default class ListItem extends React.Component<any, any> {
       <>
         <div className="item">
           <div className="img">
-            <Image height={200} src={bg} />
+            <Image
+              height={500}
+              src={
+                this.props.item.main_image != null
+                  ? this.props.item.main_image
+                  : bg
+              }
+            />
           </div>
           <div className="body">
             <div className="title">
               <h1>{this.props.item.title}</h1>
-              <h6>{this.props.item.subtitle}</h6>
             </div>
-            <div className="content">
-              asdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjfasdlfkjoijfaosdjf
-            </div>
+            {/* <div className="content">
+              {this.props.item.subtitle}
+            </div> */}
             <div className="footer">
               <div className="tool">
                 <Button.Group>

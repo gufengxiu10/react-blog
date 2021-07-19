@@ -13,7 +13,6 @@ import {
   Modal,
   Upload,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import FromHeader from "../../component/FromHeader";
 import axios from "axios";
@@ -23,6 +22,8 @@ import SaveLabel from "./component/save/LabelComponent";
 import SelectComponent from "./component/save/SelectComponent";
 import ArticleApi from "@/api/article";
 import bg from "@/static/images/articlebg.png";
+import UploadImage from "@/component/upload/Image";
+import "@/static/style/article/save.scss";
 const { Info } = save;
 const { Option } = Select;
 const { confirm } = Modal;
@@ -42,18 +43,6 @@ class Save extends React.Component<any, any> {
     super(props);
     this.save = this.save.bind(this);
     this.restore = this.restore.bind(this);
-  }
-
-  beforeUpload(file: any) {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
   }
 
   componentDidMount = () => {
@@ -106,18 +95,13 @@ class Save extends React.Component<any, any> {
         });
 
         this.setState({ tableSpinLoading: true });
-        const resut = await axios
-          .put(
-            "/article/" + match.params.id,
-            Object.assign({}, this.state.data, updateData)
-          )
-          .then((res: any) => {
-            const { data } = res;
-            data.code == 200
-              ? message.success(data.msg)
-              : message.error(data.msg);
-            this.setState({ tableSpinLoading: false });
-          });
+        await ArticleApi.ArticleSave(
+          match.params.id,
+          Object.assign({}, this.state.data, updateData)
+        ).then((res: any) => {
+          res.code == 200 ? message.success(res.msg) : message.error(res.msg);
+          this.setState({ tableSpinLoading: false });
+        });
       },
       onCancel() {
         console.log("Cancel");
@@ -344,12 +328,16 @@ class Save extends React.Component<any, any> {
                   </Row>
                 </Col>
                 <Col span={6}>
-                  <Image
-                    src={bg}
-                    style={{
-                      objectFit: "cover",
-                      width: "400p",
-                    }}
+                  <UploadImage
+                    src={this.state.data.main_image}
+                    style={{ width: "100%" }}
+                    done={(path: string) =>
+                      this.setState({
+                        data: Object.assign(this.state.data, {
+                          main_image: path,
+                        }),
+                      })
+                    }
                   />
                 </Col>
               </Row>

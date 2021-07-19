@@ -1,0 +1,25 @@
+.header {
+    min-height: 100px;
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 10px;
+
+    >div {
+        margin-bottom: 10px;
+    }
+
+    .search {
+        >div {
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.content {
+
+    .skeleton,
+    .no-data {
+        padding: 10px;
+        background-color: #fff;
+    }
+}

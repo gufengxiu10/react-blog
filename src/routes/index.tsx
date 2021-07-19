@@ -1,5 +1,7 @@
 import Article from "@/pages/article/index";
-import ArticleSave from "@/pages/article/save";
+import ArticleEdit from "@/pages/article/edit";
+import ArticleAdd from "@/pages/article/add";
+import ArticleCate from "@/pages/articleCate/index";
 import Index from "@/pages/index/index";
 import { routes as routesInterface } from "@/types/Routes";
 const routes: Array<routesInterface> = [
@@ -19,7 +21,14 @@ const routes: Array<routesInterface> = [
         name: "list",
         path: "/id/:id",
         hidden: true,
-        component: ArticleSave,
+        component: ArticleEdit,
+      },
+      {
+        title: "文章添加",
+        name: "list",
+        path: "add",
+        hidden: true,
+        component: ArticleAdd,
       },
       {
         title: "文章列表",
@@ -31,7 +40,7 @@ const routes: Array<routesInterface> = [
         title: "文章分类",
         name: "list",
         path: "cate",
-        component: Article,
+        component: ArticleCate,
       },
     ],
   },

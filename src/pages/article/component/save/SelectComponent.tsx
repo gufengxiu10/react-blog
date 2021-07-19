@@ -18,7 +18,7 @@ export default class SelectComponent extends React.Component<any> {
   }
 
   getInfo = async () => {
-    const { data } = await axios.get("/article/cate");
+    const { data } = await axios.get("/api/article/cate");
     this.setState({ data: data.data });
   };
 
