@@ -8,6 +8,7 @@ import {
 import { lists as CateList } from "./cate";
 import { lists as TagList } from "./Tag";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   lists,
   CateList,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Popconfirm, Image, message, Dropdown, Menu, Tag } from "antd";
+import { Button, Popconfirm, Image, message, Dropdown, Menu, Tag, Spin } from "antd";
 import { Link } from "react-router-dom";
 import bg from "@/static/images/articlebg.png";
 import moment from "moment";
@@ -19,17 +19,24 @@ export default class ListItem extends React.Component<any, any> {
 
   time: string = "1997-01-01";
   url: string = "/article/list";
+
+
   constructor(props: any) {
     super(props);
     this.time = moment.unix(this.props.item.create_time).format("gggg-M-DD");
     this.url = "/article/id/" + this.props.item.id;
   }
 
+
+  loadImg = () => {
+
+  }
+
   tableColumnDel = (key: any) => {
     this.setState({ tableSpinLoading: true });
     setTimeout(() => {
       const d = this.props.data.filter(
-        (item: any) => Number(item.key) != Number(key)
+        (item: any) => Number(item.key) !== Number(key)
       );
       this.props.del(d);
       message.success("删除成功");
@@ -44,7 +51,7 @@ export default class ListItem extends React.Component<any, any> {
     );
   }
 
-  del = (id: number): void => {};
+  del = (id: number): void => { };
 
   render() {
     const menu = (
@@ -56,7 +63,7 @@ export default class ListItem extends React.Component<any, any> {
     );
 
     let cateElement: JSX.Element = <></>;
-    if (this.props.item.cate != undefined) {
+    if (this.props.item.cate !== undefined) {
       const cate = (
         <Tag color={this.getRandomColor()}>{this.props.item.cate.name}</Tag>
       );
@@ -69,7 +76,7 @@ export default class ListItem extends React.Component<any, any> {
     }
 
     let tagElement: any = <></>;
-    if (this.props.item.tag != undefined) {
+    if (this.props.item.tag !== undefined) {
       const tag = this.props.item.tag.map((i: any) => (
         <Tag color={this.getRandomColor()} key={i.id}>{i.name}</Tag>
       ));
@@ -86,6 +93,10 @@ export default class ListItem extends React.Component<any, any> {
       <>
         <div className="item">
           <div className="img">
+            {/* <div style={{ width: "100%", height: 500, position: "relative", textAlign: 'center', lineHeight: "500px" }}>
+              <div className="img-bg" style={{ backgroundColor: "#333", width: "100%", height: "100%", position: 'absolute', top: 0, zIndex: 1 }}></div>
+              <Spin size="large" style={{ textAlign: "center", position: 'absolute', zIndex: 2, top: "calc(50% - 23px)" }} />
+            </div> */}
             <Image
               height={500}
               src={

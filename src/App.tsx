@@ -5,8 +5,10 @@ import Global from "@/Container";
 
 export default class App extends React.Component<any, any> {
   public state: any = {};
+
   constructor(props: any) {
     super(props);
+    this.state = {}
   }
 
   render = () => {
