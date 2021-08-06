@@ -4,7 +4,7 @@ import request from "@/util/request";
 export const lists = () => request.get("/api/article/cate");
 
 // 更新分类
-export const update = (id: number) => request.get("/api/article/cate/" + id);
+export const update = (id: number, params: { name: string }) => request.patch("/api/article/cate/" + id, params);
 
 // 删除分类
 export const del = (id: number) => request.delete('/api/article/cate/del' + id)
