@@ -1,0 +1,38 @@
+.masonry {
+    width: 100%; // 默认宽度
+    margin: 20px auto; // 剧中
+    columns: 4; // 默认列数
+    column-gap: 20px; // 列间距
+    column-span: all;
+
+    .item {
+        width: 100%;
+        break-inside: avoid;
+        margin-bottom: 30px;
+    }
+
+    .item img {
+        width: 100%;
+    }
+
+    .item h2 {
+        padding: 8px 0;
+    }
+
+    .item P {
+        color: #555;
+    }
+}
+
+.macy-container {
+    width: 100%;
+
+    div {
+        width: 100%;
+
+        >img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
