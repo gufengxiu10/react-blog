@@ -1,15 +1,11 @@
-import { DatePicker, Select, Spin } from "antd";
+import { DatePicker, Select } from "antd";
 import React from "react";
-// import Content from "@/component/Content"
 import LazyLoad from "react-lazyload";
-// import { LoadingOutlined } from '@ant-design/icons';
 import './index.scss';
 import locale from 'antd/es/date-picker/locale/zh_CN';
-// import Images from "./Images"
 import Macy from 'macy'
 import axios from "axios";
 const { Option } = Select;
-// const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 export default class Index extends React.Component<any, any>{
 
@@ -24,67 +20,83 @@ export default class Index extends React.Component<any, any>{
     }
 
 
-    componentDidMount = () => {
-
-        if (this.myRef) {
-            window.addEventListener('scroll', (item: any) => {
-                console.log(window.document.querySelector('.macy')?.clientHeight)
-            });
-        }
-
-        axios.get('/api/pixiv').then((response: {
-            data: any
-        }) => {
-            const { data } = response;
-            this.setState({
-                pixiv: data.data.illusts.filter((item: any) => item.type === 'illust' ? true : false).map((item: any) => {
-                    const height = parseInt((280 / item.width * item.height).toString());
-                    const data = {
-                        height: height,
-                        url: item.image_urls.medium.replace('i.pximg.net', 'pixiv-image-lv.pwp.link'),
-                        alt: item.title,
-                        id: item.id
-                    }
-                    return data;
-                })
+    componentDidMount = async () => {
+        const response = await axios.get('/api/pixiv');
+        const { data } = response;
+        this.setState({
+            pixiv: data.data.illusts.filter((item: any) => item.type === 'illust' ? true : false).map((item: any) => {
+                const height = parseInt((280 / item.width * item.height).toString());
+                const data = {
+                    height: height,
+                    url: item.image_urls.medium.replace('i.pximg.net', 'pixiv-image-lv.pwp.link'),
+                    alt: item.title,
+                    id: item.id
+                }
+                return data;
             })
-            this.getMacy()
-        });
+        })
+
     }
 
+    componentDidUpdate = () => {
+        this.getMacy();
+    }
+
+
     getMacy = () => {
-        if (this.state.masonry) {
-            this.state.masonry.reInit()
-        } else {
-            let masonry = new Macy({
-                container: '.macy-container', // 图像列表容器
-                trueOrder: false,
-                waitForImages: true,
-                useOwnImageLoader: false,
-                debug: true,
-                margin: { x: 13, y: 4 },    // 设计列与列的间距
-                columns: 3,    // 设置列数
-            })
-            this.setState({ masonry })
+        const current = this.myRef.current;
+        const children = current.children;
+        const width = current.offsetWidth;
+        const itemWidth = 280;
+        const gap = 10;
+        const column = parseInt((width / (itemWidth + gap)).toString());
+        let height: Array<any> = [];
+        this.state.pixiv.forEach((item: any, index: number) => {
+            if (index < column) {
+                children[index].style.top = 0;
+                children[index].style.left = index * (itemWidth + gap) + 'px';
+                height.push(children[index].offsetHeight + gap)
+            } else {
+                let minHeight = height[0];
+                let minIndex: any = 0;
+                for (let j = 0; j < height.length; j++) {
+                    if (height[j] < minHeight) {
+                        minIndex = j;
+                    }
+                }
+
+                children[index].style.top = height[minIndex] + 'px';
+                children[index].style.left = children[minIndex].offsetLeft + 'px';
+                height[minIndex] += children[index].offsetHeight + gap
+            }
+        });
+
+        //选择排序
+        let maxHeight = height[0];
+        let maxIndex = 0;
+        console.log(height)
+        for (let j = 0; j < height.length; j++) {
+            if (height[j] > maxHeight) {
+                maxIndex = j;
+                maxHeight = height[j]
+            }
         }
+
+        console.log(height[maxIndex])
+        this.myRef.current.style.height = height[maxIndex] + 'px'
+        current.style.width = itemWidth * column + "px"
     }
 
     render = () => {
         const imgItem = this.state.pixiv.map((item: any, index: any) => {
             return <div className="item" key={index} style={{ height: item.height }}>
-                <LazyLoad>
-                    <img src={item.url} alt={item.alt} onError={(e: any) => {
-                        this.setState({
-                            pixiv: this.state.pixiv.filter((d: any) => d.id === item.id ? false : true)
-                        })
-                    }} />
-                </LazyLoad>
+                <img src={item.url} alt={item.alt} onError={(e: any) => {
+                    this.setState({
+                        pixiv: this.state.pixiv.filter((d: any) => d.id === item.id ? false : true)
+                    })
+                }} />
             </div>
         })
-
-        if (this.state.masonry) {
-            this.state.masonry.reInit()
-        }
 
         return <>
             <div className="header">
@@ -93,12 +105,9 @@ export default class Index extends React.Component<any, any>{
                 </Select>
                 <DatePicker locale={locale} />
             </div>
-            <div className="macy">
-                <div className="macy-container">
+            <div className="macy" >
+                <div id="box" ref={this.myRef}>
                     {imgItem}
-                </div>
-                <div className="loading" ref={this.myRef}>
-                    加载中
                 </div>
             </div>
         </>;

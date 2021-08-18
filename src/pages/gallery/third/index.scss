@@ -36,3 +36,17 @@
         }
     }
 }
+
+#box {
+    position: relative;
+
+    .item {
+        position: absolute;
+        float: left;
+        width: 280px;
+
+        img {
+            width: 100%;
+        }
+    }
+}
