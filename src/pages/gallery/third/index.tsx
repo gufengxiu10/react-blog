@@ -3,28 +3,62 @@ import React from "react";
 import LazyLoad from "react-lazyload";
 import './index.scss';
 import locale from 'antd/es/date-picker/locale/zh_CN';
-import Macy from 'macy'
 import axios from "axios";
 const { Option } = Select;
 
 export default class Index extends React.Component<any, any>{
 
     myRef: any;
+    public state: {
+        pixiv: any;
+        page: number;
+        isEnd: boolean
+    }
 
     constructor(props: any) {
         super(props);
         this.state = {
-            pixiv: []
+            pixiv: [],
+            page: 1,
+            isEnd: false,
         }
         this.myRef = React.createRef();
     }
 
 
-    componentDidMount = async () => {
-        const response = await axios.get('/api/pixiv');
+    componentDidMount = () => {
+        this.info()
+        window.addEventListener('scroll', () => {
+            if (document.documentElement.scrollHeight - document.documentElement.clientHeight - document.documentElement.scrollTop === 0 && this.state.isEnd === false) {
+                const page = this.state.page + 1;
+                this.setState({ page: page })
+                this.info(page);
+            }
+        })
+    }
+
+    componentDidUpdate = () => {
+        this.getMacy();
+    }
+
+    info = async (page = 1) => {
+        // var e = !(arguments.length > 1 && void 0 !== arguments[1]) || arguments[1];
+        //     return t.filter((function(t) {
+        //         if (t.restrict || t.x_restrict || t.sanity_level >= 4 || "illust" !== t.type && e || t.title.includes("漫画") && e)
+        //             return !1;
+        //         if (t.tags && t.tags.length && e)
+        //             for (var i = 0; i < t.tags.length; i++)
+        //                 if (na.includes(t.tags.name))
+        //                     return !1;
+        //         return window.pixiviz.infoMap[t.id] || (window.pixiviz.infoMap[t.id] = t),
+        //         !0
+        //     }
+        //     ))
+        const response = await axios.get('/api/pixiv?page=' + page);
         const { data } = response;
-        this.setState({
-            pixiv: data.data.illusts.filter((item: any) => item.type === 'illust' ? true : false).map((item: any) => {
+        const nd = this.state.pixiv
+        if (data.data.illusts.length > 0) {
+            nd.push(...data.data.illusts.filter((item: any) => item.restrict || item.x_restrict || item.type !== 'illust' || item.sanity_level >= 4 || item.title.includes('漫画') ? false : true).map((item: any) => {
                 const height = parseInt((280 / item.width * item.height).toString());
                 const data = {
                     height: height,
@@ -33,13 +67,13 @@ export default class Index extends React.Component<any, any>{
                     id: item.id
                 }
                 return data;
-            })
-        })
+            }));
 
-    }
+            this.setState({ pixiv: nd })
+        } else {
+            this.setState({ isEnd: true })
+        }
 
-    componentDidUpdate = () => {
-        this.getMacy();
     }
 
 
@@ -74,7 +108,6 @@ export default class Index extends React.Component<any, any>{
         //选择排序
         let maxHeight = height[0];
         let maxIndex = 0;
-        console.log(height)
         for (let j = 0; j < height.length; j++) {
             if (height[j] > maxHeight) {
                 maxIndex = j;
@@ -82,19 +115,14 @@ export default class Index extends React.Component<any, any>{
             }
         }
 
-        console.log(height[maxIndex])
         this.myRef.current.style.height = height[maxIndex] + 'px'
-        current.style.width = itemWidth * column + "px"
+        current.style.width = (itemWidth + gap) * column + "px"
     }
 
     render = () => {
         const imgItem = this.state.pixiv.map((item: any, index: any) => {
             return <div className="item" key={index} style={{ height: item.height }}>
-                <img src={item.url} alt={item.alt} onError={(e: any) => {
-                    this.setState({
-                        pixiv: this.state.pixiv.filter((d: any) => d.id === item.id ? false : true)
-                    })
-                }} />
+                <LazyLoad><img src={item.url} alt={item.alt} /></LazyLoad>
             </div>
         })
 
