@@ -3,7 +3,7 @@ import ArticleEdit from "@/pages/article/edit";
 import ArticleAdd from "@/pages/article/add";
 import ArticleCate from "@/pages/articleCate/index";
 
-import GalleryThird from "@/pages/gallery/third";
+import GalleryThird from "@/pages/gallery/third/index2";
 
 import Index from "@/pages/index/index";
 import { routes as routesInterface } from "@/types/Routes";
