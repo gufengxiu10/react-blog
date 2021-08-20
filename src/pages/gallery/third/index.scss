@@ -40,14 +40,41 @@
 #box {
     position: relative;
     width: 100%;
+    margin: 0 auto;
 
     .item {
         position: absolute;
         float: left;
         width: 280px;
+        z-index: 2;
+        border-radius: 16px;
 
-        img {
-            width: 100%;
+        .item-img {
+            position: absolute;
+
+            z-index: 3;
+
+            .title {
+                position: absolute;
+                bottom: 0;
+                z-index: 4;
+                height: 30px;
+                width: 100%;
+                color: #eee;
+                background-color: #333;
+                margin-bottom: 0;
+                opacity: 0.7;
+                line-height: 30px;
+                text-align: center;
+                font-weight: bolder;
+                border-radius: 0 0 16px 16px;
+            }
+
+            img {
+                width: 100%;
+                border-radius: 16px;
+            }
         }
+
     }
 }
